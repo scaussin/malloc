@@ -6,32 +6,71 @@
 /*   By: scaussin <scaussin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/02/20 11:58:13 by scaussin          #+#    #+#             */
-/*   Updated: 2015/02/25 18:49:05 by scaussin         ###   ########.fr       */
+/*   Updated: 2015/02/25 20:36:55 by scaussin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
 
+void	print(char c)
+{
+	int i = 1;
+	int d = 0;
+
+	while (i <= 128)
+	{
+		if (c & i)
+			d = d | i;
+		i = i << 1;
+	}
+	ft_putnbr(d);
+}
+
 int			main()
 {
 	char *str;
+	char	*ptr;
 
 	str = malloc2(sizeof(*str) * 2);
 	str[0] = 'a';
 	str[1] = 0;
 	ft_printf("%s\n", str);
 
-	t_header test;
-	test.size = 6666666;
-	test.free = 127;
-	test.next = 0/*(t_header*)78*/;
-	ft_memset(&test+3, 255, sizeof (t_header)-3);
+	t_header *test = malloc(sizeof(t_header));
+	test->size = 256;
+	test->free = 110;
+	test->next = 0/*(t_header*)78*/;
+	ptr = (char *)test;
+	int i;
 
-	ft_printf("\naddr : %p -> %d\nsize : %d\nfree : %d\nnext : %p\n",
-			&test, &test, test.size, test.free, test.next);
+	for (i = 0; i < (int)sizeof(t_header) ; i++)
+	{
+		ft_printf("%p i: %d ->", ptr, i);
+		print(*ptr);
+		ft_printf("\n");
+
+		ptr++;
+	}
+
+
+/*	for (i = 0; i < sizeof(t_header) ; i++)
+	{
+		n = (int *)ptr;
+		c = (char *)ptr;
+		p = (t_header *)ptr;
+		ft_printf("%p -> %d \n size: %d \n free: %d \n next: %p\n",ptr, i, *n , *c , *p);
+		ptr++;
+	}*/
+
+	ft_memset(((char*)test)+16, 255, 1);
+
+	//ft_printf("\naddr : %p -> %d\nsize : %d\nfree : %d\nnext : %p\n",
+			//test, test, test->size, test->free, test->next);
+	// printf("debug ");
 	//print_header(g_first_header.tiny);
 	return (0);
 }
+
 
 void		*malloc2(size_t size)
 {
