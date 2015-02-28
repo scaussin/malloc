@@ -6,7 +6,7 @@
 /*   By: scaussin <scaussin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/02/20 11:58:13 by scaussin          #+#    #+#             */
-/*   Updated: 2015/02/27 19:15:20 by scaussin         ###   ########.fr       */
+/*   Updated: 2015/02/28 14:28:20 by scaussin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,8 @@ print_header(g_first_header.tiny);
 {
 	if (ptr)
 	{
-
+		if sylvain est moche 
+			return sylain est moche
 	}
 }*/
 
