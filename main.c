@@ -6,7 +6,7 @@
 /*   By: scaussin <scaussin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/02/20 11:58:13 by scaussin          #+#    #+#             */
-/*   Updated: 2015/02/28 14:28:20 by scaussin         ###   ########.fr       */
+/*   Updated: 2015/03/02 19:38:14 by scaussin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ void	print(char c)
 
 void	print_header(t_header *header)
 {
-	ft_printf("sizeof t_header : %d\nTINY_PAGE : %d\n----------- print_header -----------", SIZE_H, TINY_PAGE);
+	//ft_printf("sizeof t_header : %d\nTINY_PAGE : %d\n", SIZE_H, TINY_PAGE);
+	ft_printf("\n----------- print_header -----------");
 	while (header)
 	{
 		ft_printf("\naddr : %p -> %d\nsize : %d\nreal size : %d\nfree : %d\nstring : %s\nnext : %p\n",
@@ -37,7 +38,7 @@ void	print_header(t_header *header)
 		header = header->next;
 		ft_printf("------------------------------------");
 	}
-	ft_printf("\n");
+	ft_printf("\n------------------------------------\n\n");
 }
 
 int			main()
@@ -45,19 +46,17 @@ int			main()
 	char	*str;
 
 	str = malloc2(sizeof(*str) * 4096);
-	ft_printf("malloc1\n");
-	ft_memset(str, 'a', 4095);
+	ft_printf("malloc 1 OK -> %p\n", str);
+	ft_memset(str, 'a', 4096);
 	str[4095] = '\0';
-print_header(g_first_header.tiny);
+	//print_header(g_first_header.tiny);
 
 	char	*str2;
-	if ((str2 = malloc2(sizeof(*str2) * 4096)))
-	{
-		ft_printf("malloc2\n");
-		ft_memset(str2, 'b', 4095);
-		str2[4095] = '\0';
-	}
-print_header(g_first_header.tiny);
+	str2 = malloc2(sizeof(*str2) * 4096);
+	ft_printf("malloc 2 OK -> %p\n", str2);
+	ft_memset(str2, 'b', 4096);
+	str2[4095] = '\0';
+	//print_header(g_first_header.tiny);
 	/*char	*str3;
 	if ((str3 = malloc2(sizeof(*str3) * 4096)))
 	{
@@ -98,15 +97,16 @@ void	*get_tiny(size_t size)//return first free
 	t_header *tmp;
 	t_header *last;
 
+	//print_header(g_first_header.tiny);
 	if (!g_first_header.tiny)
 	{
 		gen_tiny(&g_first_header.tiny);
-		print_header(g_first_header.tiny);
+		return(get_tiny(size));
 	}
 	tmp = g_first_header.tiny;
 	while (tmp)
 	{
-		//ft_printf("while tmp\n");
+		ft_printf("while tmp\n");
 		if (tmp->free && tmp->size >= size + SIZE_H)
 		{
 			if (tmp->next)
@@ -118,14 +118,15 @@ void	*get_tiny(size_t size)//return first free
 			else
 			{
 				tmp->free = 0;
-				tmp->size = size;
 				tmp->next = (t_header *)((void *)tmp + size + SIZE_H);
-				if (tmp->size - SIZE_H == size)
+				/*if (tmp->size - SIZE_H == size)
 					tmp->next->size = 0;
-				else
+				else*/
 					tmp->next->size = tmp->size - size - SIZE_H;
+				tmp->size = size;
 				tmp->next->free = 1;
 				tmp->next->prev = tmp;
+				//print_header(g_first_header.tiny);
 				return (tmp + 1);
 			}
 		}
@@ -133,15 +134,19 @@ void	*get_tiny(size_t size)//return first free
 		tmp = tmp->next;
 	}
 	// liste pleine
+	ft_printf("avant - %p %p\n", &tmp, tmp);
+	print_header(tmp);
+
 	gen_tiny(&tmp);
+	ft_printf("apres - %p %p\n", &tmp, tmp);
+	print_header(tmp);
 	tmp->prev = last;
-	get_tiny(size);
-	return (0);
+	return(get_tiny(size));
 }
 
 void		gen_tiny(t_header **last)
 {
-	//ft_printf("gen_tiny\n");
+	ft_printf("gen_tiny\n");
 	*last = (t_header*)mmap(0, TINY_PAGE, PROT_READ | PROT_WRITE,
 		MAP_ANON | MAP_PRIVATE, -1, 0);
 	(*last)->size = TINY_PAGE - SIZE_H;
