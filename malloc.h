@@ -6,7 +6,7 @@
 /*   By: scaussin <scaussin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/02/20 11:59:08 by scaussin          #+#    #+#             */
-/*   Updated: 2015/03/03 16:27:50 by scaussin         ###   ########.fr       */
+/*   Updated: 2015/03/03 18:03:58 by scaussin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,5 +49,6 @@ void		*malloc2(size_t size);
 void		*get_tiny(size_t size);
 void		gen_tiny(t_header **last);
 void		print_header(t_header *header);
+void		show_alloc_mem();
 
 #endif

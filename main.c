@@ -6,7 +6,7 @@
 /*   By: scaussin <scaussin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/02/20 11:58:13 by scaussin          #+#    #+#             */
-/*   Updated: 2015/03/03 16:27:43 by scaussin         ###   ########.fr       */
+/*   Updated: 2015/03/03 18:05:50 by scaussin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,25 +47,22 @@ void	print_header(t_header *header)
 int			main()
 {
 	char	*str;
-
 	str = malloc2(sizeof(*str) * 4096);
 	ft_printf("malloc 1 OK -> %p\n", str);
 	ft_memset(str, 'a', 4096);
 	str[4095] = '\0';
-	//print_header(g_first_header.tiny);
 
 	char	*str2;
 	str2 = malloc2(sizeof(*str2) * 3000);
 	ft_printf("malloc 2 OK -> %p\n", str2);
 	ft_memset(str2, 'b', 3000);
 	str2[2999] = '\0';
-	// print_header(g_first_header.tiny);
+
 	char	*str3;
 	str3 = malloc2(sizeof(*str3) * 3000);
 	ft_printf("malloc 2 OK -> %p\n", str3);
 	ft_memset(str3, 'c', 3000);
 	str3[2999] = '\0';
-	//print_header(g_first_header.tiny);
 
 	char	*str4;
 	str4 = malloc2(sizeof(*str4) * 1000);
@@ -73,28 +70,15 @@ int			main()
 	ft_memset(str4, 'd', 1000);
 	str4[999] = '\0';
 
-
 	char	*str5;
 	str5 = malloc2(sizeof(*str5) * 30);
 	ft_printf("malloc 2 OK -> %p\n", str5);
 	ft_memset(str5, 'e', 30);
 	str5[29] = '\0';
+	
 	print_header(g_first_header.tiny);
 
-	/*char	*str3;
-	if ((str3 = malloc2(sizeof(*str3) * 4096)))
-	{
-		ft_printf("malloc3\n");
-		ft_memset(str3, 'c', 4095);
-		str3[4095] = '\0';
-	}
-
-	print_header(g_first_header.tiny);
-*/
-	/*str2 = malloc2(sizeof(*str2) * 3);
-	str2[0] = 'b';
-	str2[1] = 'c';
-	str2[2] = 0;*/
+	show_alloc_mem();
 
 	return (0);
 }
@@ -179,4 +163,17 @@ void		gen_tiny(t_header **last)
 	(*last)->free = 1;
 	(*last)->next = NULL;
 	(*last)->prev = NULL;
+}
+
+void	show_alloc_mem()
+{
+	t_header	*tmp;
+
+	tmp = g_first_header.tiny;
+	ft_printf("TINY : 0x%X\n", tmp);
+	while (tmp)
+	{
+		ft_printf("0x%X - 0x%X : %d octets\n", tmp + 1, (void *)(tmp + 1) + tmp->size, ((void *)(tmp + 1) + tmp->size) - (void *)(tmp + 1));
+		tmp = tmp->next;
+	}
 }
