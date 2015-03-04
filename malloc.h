@@ -6,7 +6,7 @@
 /*   By: scaussin <scaussin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/02/20 11:59:08 by scaussin          #+#    #+#             */
-/*   Updated: 2015/03/04 15:19:24 by scaussin         ###   ########.fr       */
+/*   Updated: 2015/03/04 15:41:05 by scaussin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,7 @@ t_first_header		g_first_header = {0, NULL, NULL};
 
 void				*malloc2(size_t size);
 int					new_alloc(t_header **last, unsigned int size_alloc);
-void				*get_mem(size_t size, unsigned int size_alloc,
-					t_header **first_header);
+void				*get_mem(size_t size, unsigned int size_alloc, t_header **first_header);
 void				print_header(t_header *header);
 void				show_alloc_mem();
 int					print_alloc_mem(t_header *first_header);
