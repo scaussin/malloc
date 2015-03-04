@@ -6,7 +6,7 @@
 /*   By: scaussin <scaussin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/02/20 11:59:08 by scaussin          #+#    #+#             */
-/*   Updated: 2015/03/03 18:03:58 by scaussin         ###   ########.fr       */
+/*   Updated: 2015/03/04 15:19:24 by scaussin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,27 +28,30 @@
 # define TINY_PAGE (TINY + SIZE_H) * 2//getpagesize()
 # define SMALL_PAGE (SMALL + SIZE_H) * 2//getpagesize()
 
-typedef struct	s_header
+typedef struct		s_header
 {
 	size_t			size;
 	char			free;
 	struct s_header	*next;
 	struct s_header	*prev;
-}				t_header;
+}					t_header;
 
-typedef struct	s_first_header
+typedef struct		s_first_header
 {
-	t_header	*tiny;
-	t_header	*small;
-	t_header	*large;
-}				t_first_header;
+	t_header		*tiny;
+	t_header		*small;
+	t_header		*large;
+}					t_first_header;
 
-t_first_header g_first_header = {0, NULL, NULL};
+t_first_header		g_first_header = {0, NULL, NULL};
 
-void		*malloc2(size_t size);
-void		*get_tiny(size_t size);
-void		gen_tiny(t_header **last);
-void		print_header(t_header *header);
-void		show_alloc_mem();
+void				*malloc2(size_t size);
+int					new_alloc(t_header **last, unsigned int size_alloc);
+void				*get_mem(size_t size, unsigned int size_alloc,
+					t_header **first_header);
+void				print_header(t_header *header);
+void				show_alloc_mem();
+int					print_alloc_mem(t_header *first_header);
+
 
 #endif

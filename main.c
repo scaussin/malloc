@@ -6,7 +6,7 @@
 /*   By: scaussin <scaussin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/02/20 11:58:13 by scaussin          #+#    #+#             */
-/*   Updated: 2015/03/03 18:05:50 by scaussin         ###   ########.fr       */
+/*   Updated: 2015/03/04 15:21:23 by scaussin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	print_header(t_header *header)
 	ft_printf("\n------------------------------------\n\n");
 }
 
-int			main()
+int		main()
 {
 	char	*str;
 	str = malloc2(sizeof(*str) * 4096);
@@ -85,45 +85,39 @@ int			main()
 
 /*void	free(void *ptr)
 {
-	if (ptr)
-	{
-		if sylvain est moche 
-			return sylain est moche
-	}
+	
 }*/
 
-void		*malloc2(size_t size)
+void	*malloc2(size_t size)
 {
 	if (size <= TINY)
-		return (get_tiny(size));
+		return (get_mem(size, TINY, &(g_first_header.tiny)));
 	else
 		return 0;
 }
 
-void	*get_tiny(size_t size)//return first free
+void	*get_mem(size_t size, unsigned int size_alloc, t_header **first_header)
 {
 	t_header *tmp;
 	t_header *last;
 	t_header *tmptmp;
 
-	//print_header(g_first_header.tiny);
-	if (!g_first_header.tiny)
+	if (!(*first_header))
 	{
-		gen_tiny(&g_first_header.tiny);
-		return(get_tiny(size));
+		if (!new_alloc(first_header, size_alloc))
+			return (0);
+		return(get_mem(size, size_alloc, first_header));
 	}
-	tmp = g_first_header.tiny;
+	tmp = *first_header;
 	while (tmp)
 	{
 		if (tmp->free && (tmp->size >= size + SIZE_H || (tmp->size >= size && tmp->next)))
 		{
+			tmp->free = 0;
 			if (tmp->next)
 			{
-				ft_printf("raccordement...\n");
-				tmp->free = 0;
 				if (tmp->size - size >= SIZE_H)
 				{
-					ft_printf("plus petit OK\n");
 					tmptmp = tmp->next;
 					tmp->next = (t_header *)((void *)tmp + size + SIZE_H);
 					tmp->next->size = tmp->size - size - SIZE_H;
@@ -136,7 +130,6 @@ void	*get_tiny(size_t size)//return first free
 			}
 			else
 			{
-				tmp->free = 0;
 				tmp->next = (t_header *)((void *)tmp + size + SIZE_H);
 				tmp->next->size = tmp->size - size - SIZE_H;
 				tmp->size = size;
@@ -148,32 +141,53 @@ void	*get_tiny(size_t size)//return first free
 		last = tmp;
 		tmp = tmp->next;
 	}
-	// liste pleine
-	gen_tiny(&(last->next));
-	(void)last;
-	return(get_tiny(size));
+	if (!new_alloc(&(last->next), size_alloc))
+		return (0);
+	return(get_mem(size, size_alloc, first_header));
 }
 
-void		gen_tiny(t_header **last)
+int		new_alloc(t_header **last, unsigned int size_alloc)
 {
-	ft_printf("gen_tiny\n");
-	*last = (t_header*)mmap(0, TINY_PAGE, PROT_READ | PROT_WRITE,
-		MAP_ANON | MAP_PRIVATE, -1, 0);
-	(*last)->size = TINY_PAGE - SIZE_H;
+	if (!(*last = (t_header*)mmap(0, size_alloc, PROT_READ | PROT_WRITE,
+		MAP_ANON | MAP_PRIVATE, -1, 0)))
+		return (0);
+	(*last)->size = size_alloc - SIZE_H;
 	(*last)->free = 1;
 	(*last)->next = NULL;
 	(*last)->prev = NULL;
+	return (1);
+}
+
+int		print_alloc_mem(t_header *first_header)
+{
+	int		count;
+
+	count = 0;
+	while (first_header)
+	{
+		if (!first_header->free)
+		{
+			ft_printf("0x%X - 0x%X : %d octets\n", first_header + 1,
+				(void *)(first_header + 1) + first_header->size,
+				((void *)(first_header + 1) + first_header->size) -
+				(void *)(first_header + 1));
+			count += ((void *)(first_header + 1) + first_header->size) -
+				(void *)(first_header + 1);
+		}
+		first_header = first_header->next;
+	}
+	return (count);
 }
 
 void	show_alloc_mem()
 {
-	t_header	*tmp;
+	int		count;
 
-	tmp = g_first_header.tiny;
-	ft_printf("TINY : 0x%X\n", tmp);
-	while (tmp)
-	{
-		ft_printf("0x%X - 0x%X : %d octets\n", tmp + 1, (void *)(tmp + 1) + tmp->size, ((void *)(tmp + 1) + tmp->size) - (void *)(tmp + 1));
-		tmp = tmp->next;
-	}
+	ft_printf("TINY : 0x%X\n", g_first_header.tiny);
+	count = print_alloc_mem(g_first_header.tiny);
+	ft_printf("SMALL : 0x%X\n", g_first_header.small);
+	count += print_alloc_mem(g_first_header.small);
+	ft_printf("LARGE : 0x%X\n", g_first_header.large);
+	count += print_alloc_mem(g_first_header.large);
+	ft_printf("Total : %d octets\n", count);
 }
