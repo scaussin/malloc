@@ -6,7 +6,7 @@
 /*   By: scaussin <scaussin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/02/20 11:58:13 by scaussin          #+#    #+#             */
-/*   Updated: 2015/03/04 17:26:39 by scaussin         ###   ########.fr       */
+/*   Updated: 2015/03/16 17:55:17 by scaussin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,16 +28,23 @@ void	print(char c)
 
 void	print_header(t_header *header)
 {
-	ft_printf("sizeof t_header : %d\nTINY_PAGE : %d\n", SIZE_H, TINY_PAGE);
+//	ft_printf("sizeof t_header : %d\nTINY_PAGE : %d\n", SIZE_H, TINY_PAGE);
 	ft_printf("\n----------- print_header -----------");
+	if (header == g_first_header.tiny)
+		ft_printf("\n--------------- TINY ---------------");
+	else if (header == g_first_header.small)
+		ft_printf("\n--------------- SMALL --------------");
+	else if (header == g_first_header.large)
+		ft_printf("\n--------------- LARGE --------------");
+
 	if (!header)
 		ft_printf("\n(NULL)");
 	while (header)
 	{
-		ft_printf("\naddr : %p -> %d\nsize : %d\nreal size : %d\nfree : %d\nstring : %s\nnext : %p -> %p\n",
+		ft_printf("\naddr : %p -> %d\nsize : %d\nreal size : %d\nfree : %d\nstring : %s\nnext : %p -> %p\nprev : %p -> %p\n",
 			header, header, 
 			header->size, header->next ? (void *)header->next - (void *)header : (void *)header->next - (void *)header->next,
-			header->free, header + 1, &(header->next), header->next);
+			header->free, header + 1, &(header->next), header->next, &(header->prev), header->prev);
 		header = header->next;
 		ft_printf("------------------------------------");
 	}
@@ -46,12 +53,38 @@ void	print_header(t_header *header)
 
 int		main()
 {
+ft_printf("%d\n%d\n%d\n", mmap(0, 100, PROT_READ | PROT_WRITE,
+		MAP_ANON | MAP_PRIVATE, -1, 0),mmap(0, 10, PROT_READ | PROT_WRITE,
+		MAP_ANON | MAP_PRIVATE, -1, 0), mmap(0, 100, PROT_READ | PROT_WRITE,
+		MAP_ANON | MAP_PRIVATE, -1, 0));
+
+	print_header(g_first_header.tiny);
 	char	*str;
 	str = malloc2(sizeof(*str) * 4096);
 	ft_memset(str, 'a', 4096);
 	str[4095] = '\0';
-
+print_header(g_first_header.tiny);
 	char	*str2;
+	str2 = malloc2(sizeof(*str2) * 4096);
+	ft_memset(str2, 'b', 4096);
+	str2[4095] = '\0';
+print_header(g_first_header.tiny);
+	char	*str3;
+	str3 = malloc2(sizeof(*str3) * 4096);
+	ft_memset(str3, 'c', 4096);
+	str3[4095] = '\0';
+print_header(g_first_header.tiny);
+	char	*str4;
+	str4 = malloc2(sizeof(*str4) * 4096);
+	ft_memset(str4, 'd', 4096);
+	str4[4095] = '\0';
+print_header(g_first_header.tiny);
+	char	*str5;
+	str5 = malloc2(sizeof(*str5) * 4096);
+	ft_memset(str5, 'e', 4096);
+	str5[4095] = '\0';
+
+	/*char	*str2;
 	str2 = malloc2(sizeof(*str2) * 3000);
 	ft_memset(str2, 'b', 3000);
 	str2[2999] = '\0';
@@ -71,12 +104,16 @@ int		main()
 	ft_memset(str5, 'e', 30);
 	str5[29] = '\0';
 
+	char	*str9;
+	str9 = malloc2(sizeof(*str9) * 3000);
+	ft_memset(str9, 'g', 3000);
+	str9[2999] = '\0';*/
+
 	char	*str6;
 	str6 = malloc2(sizeof(*str6) * 16384);
 	ft_memset(str6, 'f', 16384);
 	str6[16383] = '\0';
 
-ft_printf("large\n");
 	char	*str7;
 	str7 = malloc2(sizeof(*str7) * 5000000);
 	ft_memset(str7, 'f', 500);
@@ -88,7 +125,7 @@ ft_printf("large\n");
 	str8[7999999] = '\0';
 	
 	print_header(g_first_header.tiny);
-	print_header(g_first_header.small);
+	//print_header(g_first_header.small);
 	print_header(g_first_header.large);
 	show_alloc_mem();
 	return (0);
@@ -109,16 +146,30 @@ void	*malloc2(size_t size)
 		return (get_mem(size, size + SIZE_H , &(g_first_header.large)));
 }
 
+void	join_header(t_header *prev, t_header *new_h, t_header **next, size_t size)
+{
+	t_header *tmptmp;
+
+	tmptmp = (*next);
+	(*next) = new_h;
+	new_h->size = prev->size - size - SIZE_H;
+	new_h->free = 1;
+	new_h->prev = prev;
+	new_h->next = tmptmp;
+	new_h->next->prev= new_h;
+	new_h->prev->size = size;
+}
+
 void	*get_mem(size_t size, unsigned int size_alloc, t_header **first_header)
 {
 	t_header *tmp;
 	t_header *last;
-	t_header *tmptmp;
+	//t_header *tmptmp;
 
 	if (!(*first_header))
 	{
 		
-		if (!new_alloc(first_header, size_alloc))
+		if (!new_alloc(first_header, size_alloc, NULL))
 			return (0);
 		return(get_mem(size, size_alloc, first_header));
 	}
@@ -132,14 +183,15 @@ void	*get_mem(size_t size, unsigned int size_alloc, t_header **first_header)
 			{
 				if (tmp->size - size >= SIZE_H)
 				{
-					tmptmp = tmp->next;
+					join_header(tmp, (t_header *)((void *)tmp + size + SIZE_H), &(tmp->next), size);
+					/*tmptmp = tmp->next;
 					tmp->next = (t_header *)((void *)tmp + size + SIZE_H);
 					tmp->next->size = tmp->size - size - SIZE_H;
 					tmp->next->free = 1;
 					tmp->next->prev = tmp;
 					tmp->next->next = tmptmp;
 					tmp->next->next->prev = tmp->next;
-					tmp->size = size;
+					tmp->size = size;*/
 				}
 			}
 			else
@@ -158,12 +210,12 @@ void	*get_mem(size_t size, unsigned int size_alloc, t_header **first_header)
 		last = tmp;
 		tmp = tmp->next;
 	}
-	if (!new_alloc(&(last->next), size_alloc))
+	if (!new_alloc(&(last->next), size_alloc, last))
 		return (0);
 	return(get_mem(size, size_alloc, first_header));
 }
 
-int		new_alloc(t_header **last, unsigned int size_alloc)
+int		new_alloc(t_header **last, unsigned int size_alloc, t_header *prev)
 {
 	ft_printf("new\n");
 	if (!(*last = (t_header*)mmap(0, size_alloc, PROT_READ | PROT_WRITE,
@@ -175,7 +227,7 @@ int		new_alloc(t_header **last, unsigned int size_alloc)
 		(*last)->size = size_alloc;
 	(*last)->free = 1;
 	(*last)->next = NULL;
-	(*last)->prev = NULL;
+	(*last)->prev = prev;
 	return (1);
 }
 
