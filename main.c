@@ -6,25 +6,11 @@
 /*   By: scaussin <scaussin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/02/20 11:58:13 by scaussin          #+#    #+#             */
-/*   Updated: 2015/03/18 15:25:28 by scaussin         ###   ########.fr       */
+/*   Updated: 2015/03/18 18:26:14 by scaussin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
-
-void	print(char c)
-{
-	int i = 1;
-	int d = 0;
-
-	while (i <= 128)
-	{
-		if (c & i)
-			d = d | i;
-		i = i << 1;
-	}
-	ft_putnbr(d);
-}
 
 void	print_header(t_header *header)
 {
@@ -36,7 +22,6 @@ void	print_header(t_header *header)
 		ft_printf("\n--------------- SMALL --------------");
 	else if (header == g_first_header.large)
 		ft_printf("\n--------------- LARGE --------------");
-
 	if (!header)
 		ft_printf("\n(NULL)");
 	while (header)
@@ -92,7 +77,19 @@ int		main()
 	str8 = malloc2(sizeof(*str8) * 8000000);
 	ft_memset(str8, 'f', 800);
 	str8[7999999] = '\0';
-	
+
+	print_header(g_first_header.tiny);
+	print_header(g_first_header.small);
+	print_header(g_first_header.large);
+	show_alloc_mem();
+	free2(str);
+	free2(str2);
+	free2(str3);
+	free2(str4);
+	free2(str5);
+	free2(str6);
+	free2(str7);
+	free2(str8);
 	print_header(g_first_header.tiny);
 	print_header(g_first_header.small);
 	print_header(g_first_header.large);
@@ -100,10 +97,54 @@ int		main()
 	return (0);
 }
 
-/*void	free(void *ptr)
+void	free2(void *ptr)
 {
-	
-}*/
+	t_header	*header;
+
+	if (!ptr)
+		return ;
+	header = (t_header *)(ptr - SIZE_H);
+	ft_printf("add %p\n", header);
+	header->free = 1;
+	if (header->size > SMALL)
+	{
+		free_large(header);
+		return ;
+	}
+	if (header->prev && header->prev->free == 1 &&
+		(void *)header->prev + header->prev->size + SIZE_H == header)
+	{
+		ft_printf("merge1\n");
+		merge_header(header->prev, header);
+		header = header->next->prev;
+	}
+	if (header->next && header->next->free == 1 &&
+		(void *)header + header->size + SIZE_H == header->next)
+	{
+		ft_printf("merge2\n");
+		merge_header(header, header->next);
+	}
+}
+
+void	free_large(t_header *ptr)
+{
+	if (ptr->prev)
+		ptr->prev->next = ptr->next;
+	else
+		g_first_header.large = ptr->next;
+	if (ptr->next)
+		ptr->next->prev = ptr->prev;
+	munmap(ptr, ptr->size + SIZE_H);
+}
+
+void	merge_header(t_header *first, t_header *second)
+{
+	ft_printf("merge\n");
+	first->size += second->size + SIZE_H;
+	first->next = second->next;
+	if (second->next)
+		second->next->prev = first;
+}
 
 void	*malloc2(size_t size)
 {
@@ -112,7 +153,7 @@ void	*malloc2(size_t size)
 	else if (size <= SMALL)
 		return (get_mem(size, SMALL_PAGE, &(g_first_header.small)));
 	else
-		return (get_mem(size, size + SIZE_H , &(g_first_header.large)));
+		return (get_mem(size, size + SIZE_H, &(g_first_header.large)));
 }
 
 void	join_header(t_header *prev, t_header *new_h, size_t size)
@@ -125,55 +166,49 @@ void	join_header(t_header *prev, t_header *new_h, size_t size)
 	new_h->free = 1;
 	new_h->prev = prev;
 	new_h->next = tmp;
-	new_h->next->prev= new_h;
+	new_h->next->prev = new_h;
 	prev->size = size;
+}
+
+void	create_header(t_header *tmp, size_t size)
+{
+	tmp->free = 0;
+	if (tmp->next)
+	{
+		if (tmp->size - size >= SIZE_H)
+			join_header(tmp, (t_header *)((void *)tmp + size + SIZE_H), size);
+	}
+	else
+	{
+		if (size <= SMALL)
+		{
+			tmp->next = (t_header *)((void *)tmp + size + SIZE_H);
+			tmp->next->size = tmp->size - size - SIZE_H;
+			tmp->next->free = 1;
+			tmp->next->prev = tmp;
+		}
+		tmp->size = size;
+	}
 }
 
 void	*get_mem(size_t size, unsigned int size_alloc, t_header **first_header)
 {
 	t_header *tmp;
 	t_header *last;
-	//t_header *tmptmp;
 
 	if (!(*first_header))
 	{
-		
 		if (!new_alloc(first_header, size_alloc, NULL))
 			return (0);
-		return(get_mem(size, size_alloc, first_header));
+		return (get_mem(size, size_alloc, first_header));
 	}
 	tmp = *first_header;
 	while (tmp)
 	{
-		if (tmp->free && (tmp->size >= size + SIZE_H || (tmp->size >= size && tmp->next)))
+		if (tmp->free && (tmp->size >= size + SIZE_H ||
+			(tmp->size >= size && tmp->next)))
 		{
-			tmp->free = 0;
-			if (tmp->next)
-			{
-				if (tmp->size - size >= SIZE_H)
-				{
-					join_header(tmp, (t_header *)((void *)tmp + size + SIZE_H), size);
-					/*tmptmp = tmp->next;
-					tmp->next = (t_header *)((void *)tmp + size + SIZE_H);
-					tmp->next->size = tmp->size - size - SIZE_H;
-					tmp->next->free = 1;
-					tmp->next->prev = tmp;
-					tmp->next->next = tmptmp;
-					tmp->next->next->prev = tmp->next;
-					tmp->size = size;*/
-				}
-			}
-			else
-			{
-				if (size <= SMALL)
-				{
-					tmp->next = (t_header *)((void *)tmp + size + SIZE_H);
-					tmp->next->size = tmp->size - size - SIZE_H;
-					tmp->next->free = 1;
-					tmp->next->prev = tmp;
-				}
-				tmp->size = size;
-			}
+			create_header(tmp, size);
 			return (tmp + 1);
 		}
 		last = tmp;
@@ -181,12 +216,11 @@ void	*get_mem(size_t size, unsigned int size_alloc, t_header **first_header)
 	}
 	if (!new_alloc(&(last->next), size_alloc, last))
 		return (0);
-	return(get_mem(size, size_alloc, first_header));
+	return (get_mem(size, size_alloc, first_header));
 }
 
 int		new_alloc(t_header **last, unsigned int size_alloc, t_header *prev)
 {
-	ft_printf("new\n");
 	if (!(*last = (t_header*)mmap(0, size_alloc, PROT_READ | PROT_WRITE,
 		MAP_ANON | MAP_PRIVATE, -1, 0)))
 		return (0);
@@ -221,7 +255,7 @@ int		print_alloc_mem(t_header *first_header)
 	return (count);
 }
 
-void	show_alloc_mem()
+void	show_alloc_mem(void)
 {
 	int		count;
 

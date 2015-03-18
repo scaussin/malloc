@@ -6,7 +6,7 @@
 /*   By: scaussin <scaussin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/02/20 11:59:08 by scaussin          #+#    #+#             */
-/*   Updated: 2015/03/18 15:24:07 by scaussin         ###   ########.fr       */
+/*   Updated: 2015/03/18 17:16:04 by scaussin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,13 @@ void				*malloc2(size_t size);
 int					new_alloc(t_header **last, unsigned int size_alloc, t_header *prev);
 void				*get_mem(size_t size, unsigned int size_alloc, t_header **first_header);
 void				print_header(t_header *header);
-void				show_alloc_mem();
+void				show_alloc_mem(void);
 int					print_alloc_mem(t_header *first_header);
 void				join_header(t_header *prev, t_header *new_h, size_t size);
+void				create_header(t_header *tmp, size_t size);
+void				free2(void *ptr);
+void				merge_header(t_header *first, t_header *second);
+void				free_large(t_header *ptr);
 
 
 
