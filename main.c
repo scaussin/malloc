@@ -6,7 +6,7 @@
 /*   By: scaussin <scaussin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/02/20 11:58:13 by scaussin          #+#    #+#             */
-/*   Updated: 2015/03/16 17:55:17 by scaussin         ###   ########.fr       */
+/*   Updated: 2015/03/18 15:25:28 by scaussin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,38 +53,12 @@ void	print_header(t_header *header)
 
 int		main()
 {
-ft_printf("%d\n%d\n%d\n", mmap(0, 100, PROT_READ | PROT_WRITE,
-		MAP_ANON | MAP_PRIVATE, -1, 0),mmap(0, 10, PROT_READ | PROT_WRITE,
-		MAP_ANON | MAP_PRIVATE, -1, 0), mmap(0, 100, PROT_READ | PROT_WRITE,
-		MAP_ANON | MAP_PRIVATE, -1, 0));
-
-	print_header(g_first_header.tiny);
 	char	*str;
 	str = malloc2(sizeof(*str) * 4096);
 	ft_memset(str, 'a', 4096);
 	str[4095] = '\0';
-print_header(g_first_header.tiny);
-	char	*str2;
-	str2 = malloc2(sizeof(*str2) * 4096);
-	ft_memset(str2, 'b', 4096);
-	str2[4095] = '\0';
-print_header(g_first_header.tiny);
-	char	*str3;
-	str3 = malloc2(sizeof(*str3) * 4096);
-	ft_memset(str3, 'c', 4096);
-	str3[4095] = '\0';
-print_header(g_first_header.tiny);
-	char	*str4;
-	str4 = malloc2(sizeof(*str4) * 4096);
-	ft_memset(str4, 'd', 4096);
-	str4[4095] = '\0';
-print_header(g_first_header.tiny);
-	char	*str5;
-	str5 = malloc2(sizeof(*str5) * 4096);
-	ft_memset(str5, 'e', 4096);
-	str5[4095] = '\0';
 
-	/*char	*str2;
+	char	*str2;
 	str2 = malloc2(sizeof(*str2) * 3000);
 	ft_memset(str2, 'b', 3000);
 	str2[2999] = '\0';
@@ -104,11 +78,6 @@ print_header(g_first_header.tiny);
 	ft_memset(str5, 'e', 30);
 	str5[29] = '\0';
 
-	char	*str9;
-	str9 = malloc2(sizeof(*str9) * 3000);
-	ft_memset(str9, 'g', 3000);
-	str9[2999] = '\0';*/
-
 	char	*str6;
 	str6 = malloc2(sizeof(*str6) * 16384);
 	ft_memset(str6, 'f', 16384);
@@ -125,7 +94,7 @@ print_header(g_first_header.tiny);
 	str8[7999999] = '\0';
 	
 	print_header(g_first_header.tiny);
-	//print_header(g_first_header.small);
+	print_header(g_first_header.small);
 	print_header(g_first_header.large);
 	show_alloc_mem();
 	return (0);
@@ -146,18 +115,18 @@ void	*malloc2(size_t size)
 		return (get_mem(size, size + SIZE_H , &(g_first_header.large)));
 }
 
-void	join_header(t_header *prev, t_header *new_h, t_header **next, size_t size)
+void	join_header(t_header *prev, t_header *new_h, size_t size)
 {
-	t_header *tmptmp;
+	t_header *tmp;
 
-	tmptmp = (*next);
-	(*next) = new_h;
+	tmp = prev->next;
+	prev->next = new_h;
 	new_h->size = prev->size - size - SIZE_H;
 	new_h->free = 1;
 	new_h->prev = prev;
-	new_h->next = tmptmp;
+	new_h->next = tmp;
 	new_h->next->prev= new_h;
-	new_h->prev->size = size;
+	prev->size = size;
 }
 
 void	*get_mem(size_t size, unsigned int size_alloc, t_header **first_header)
@@ -183,7 +152,7 @@ void	*get_mem(size_t size, unsigned int size_alloc, t_header **first_header)
 			{
 				if (tmp->size - size >= SIZE_H)
 				{
-					join_header(tmp, (t_header *)((void *)tmp + size + SIZE_H), &(tmp->next), size);
+					join_header(tmp, (t_header *)((void *)tmp + size + SIZE_H), size);
 					/*tmptmp = tmp->next;
 					tmp->next = (t_header *)((void *)tmp + size + SIZE_H);
 					tmp->next->size = tmp->size - size - SIZE_H;
