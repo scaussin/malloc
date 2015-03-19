@@ -6,7 +6,7 @@
 /*   By: scaussin <scaussin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/02/20 11:58:13 by scaussin          #+#    #+#             */
-/*   Updated: 2015/03/19 11:23:49 by scaussin         ###   ########.fr       */
+/*   Updated: 2015/03/19 14:14:13 by scaussin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,21 +107,34 @@ void	*realloc2(void *ptr, size_t size)
 	find_size_to_mem(header, size);
 }
 
-void	find_size_to_mem(t_header *ptr, size_t size)
+void	find_new_size_in_mem(t_header *header, size_t size)
 {
-	if (header->next && header->next->size + SIZE_H >= abs(size - header->size))
+	int	add_size;
+
+	add_size = abs(size - header->size);
+	if (header->next && header->next->free && mem_following(header) &&
+		header->next->size + SIZE_H >= add_size)
+	{
+		//merge_header(header, header->next);
+		ft_memccpy((void *)header + add_size, header, SIZE_H);
+		if (reste)
+	}
 }
+
+/*void	move_header(t_header *dest, t_header *src)
+{
+	ft_memccpy(dest, src, SIZE_H);
+}*/
 
 int		abs(int i)
 {
-	if (i < 0)
-		i = -i;
-	return (i);
+	return (i > 0 ? i : -i);
 }
 
-int		mem_following(t_header *first)
+int		mem_following(t_header *header)
 {
-	if (first + SIZE_H + first->size == first->next)
+	if (header->next &&
+		(void *)header + (void *)header->size + SIZE_H == header->next)
 		return (1);
 	return (0);
 }
@@ -140,19 +153,15 @@ void	free2(void *ptr)
 		free_large(header);
 		return ;
 	}
-	if (header->prev && header->prev->free == 1 &&
-		(void *)header->prev + header->prev->size + SIZE_H == header)
+	if (header->prev && header->prev->free == 1 && mem_following(header->prev))
+		/*(void *)header->prev + header->prev->size + SIZE_H == header*/
 	{
-		ft_printf("merge1\n");
 		merge_header(header->prev, header);
 		header = header->next->prev;
 	}
-	if (header->next && header->next->free == 1 &&
-		(void *)header + header->size + SIZE_H == header->next)
-	{
-		ft_printf("merge2\n");
+	if (header->next && header->next->free == 1 && mem_following(header))
+		/*(void *)header + header->size + SIZE_H == header->next*/
 		merge_header(header, header->next);
-	}
 }
 
 void	free_large(t_header *ptr)
@@ -168,7 +177,6 @@ void	free_large(t_header *ptr)
 
 void	merge_header(t_header *first, t_header *second)
 {
-	ft_printf("merge\n");
 	first->size += second->size + SIZE_H;
 	first->next = second->next;
 	if (second->next)
