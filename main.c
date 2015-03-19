@@ -6,7 +6,7 @@
 /*   By: scaussin <scaussin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/02/20 11:58:13 by scaussin          #+#    #+#             */
-/*   Updated: 2015/03/18 18:26:14 by scaussin         ###   ########.fr       */
+/*   Updated: 2015/03/19 11:23:49 by scaussin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,35 @@ int		main()
 	print_header(g_first_header.small);
 	print_header(g_first_header.large);
 	show_alloc_mem();
+	return (0);
+}
+
+void	*realloc2(void *ptr, size_t size)
+{
+	t_header	*header;
+
+	if (!ptr || size == 0)
+		return (ptr);
+	header = (t_header *)(ptr - SIZE_H);
+	find_size_to_mem(header, size);
+}
+
+void	find_size_to_mem(t_header *ptr, size_t size)
+{
+	if (header->next && header->next->size + SIZE_H >= abs(size - header->size))
+}
+
+int		abs(int i)
+{
+	if (i < 0)
+		i = -i;
+	return (i);
+}
+
+int		mem_following(t_header *first)
+{
+	if (first + SIZE_H + first->size == first->next)
+		return (1);
 	return (0);
 }
 
