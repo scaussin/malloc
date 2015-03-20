@@ -6,7 +6,7 @@
 /*   By: scaussin <scaussin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/02/20 11:59:08 by scaussin          #+#    #+#             */
-/*   Updated: 2015/03/18 17:16:04 by scaussin         ###   ########.fr       */
+/*   Updated: 2015/03/20 18:44:54 by scaussin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,12 @@ void				create_header(t_header *tmp, size_t size);
 void				free2(void *ptr);
 void				merge_header(t_header *first, t_header *second);
 void				free_large(t_header *ptr);
-
+void				*move_header(size_t add_size, t_header *header);
+void				*find_new_size_in_mem(t_header *header, size_t size);
+void				*realloc2(void *ptr, size_t size);
+int					ft_abs(int i);
+int					mem_following(t_header *header);
+void				ft_memcpy_reverse(void *dest, const void *src, size_t n);
 
 
 #endif
