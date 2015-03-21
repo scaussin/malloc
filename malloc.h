@@ -56,12 +56,13 @@ void				create_header(t_header *tmp, size_t size);
 void				free2(void *ptr);
 void				merge_header(t_header *first, t_header *second);
 void				free_large(t_header *ptr);
-void				*move_header(size_t add_size, t_header *header);
+void				*move_header(size_t add_size, t_header *header, int move_left);
 void				*find_new_size_in_mem(t_header *header, size_t size);
 void				*realloc2(void *ptr, size_t size);
 int					ft_abs(int i);
 int					mem_following(t_header *header);
 void				ft_memcpy_reverse(void *dest, const void *src, size_t n);
+void				show_alloc_mem_ex(void *ptr);
 
 
 #endif
