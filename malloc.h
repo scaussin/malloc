@@ -63,6 +63,7 @@ int					ft_abs(int i);
 int					mem_following(t_header *header);
 void				ft_memcpy_reverse(void *dest, const void *src, size_t n);
 void				show_alloc_mem_ex(void *ptr);
-
+void				print_hexa(size_t size, void *ptr,  unsigned int i, unsigned int *j);
+void				printf_char(size_t size, void *ptr, unsigned int i, unsigned int j);
 
 #endif

@@ -93,10 +93,12 @@ int		main()
 	print_header(g_first_header.tiny);
 	print_header(g_first_header.small);
 	print_header(g_first_header.large);*/
-	char	*str;
-	str = malloc2(sizeof(*str) * 4001);
-	ft_memset(str, 'U', 999);
-	str[999] = '\0';
+	char *str;
+	str = malloc2(sizeof(*str) * 29);
+
+	ft_memcpy(str, "Bonjour je suis un dump hexa", 28);
+	str[27] = -1;
+	str[28] = '\0';
 
 	show_alloc_mem_ex(str);
 ft_printf("\n");
@@ -122,9 +124,7 @@ void	show_alloc_mem_ex(void *ptr)
 {
 	t_header		*header;
 	unsigned int	i;
-	char c;
 	unsigned int	j;
-	unsigned int	k;
 
 	i = 0;
 	if (!ptr)
@@ -133,40 +133,54 @@ void	show_alloc_mem_ex(void *ptr)
 	while (i < header->size)
 	{
 		ft_printf("0x%X    ", ptr + i);
-		j = 0;
-		while (j < 16 /*&& i + j < header->size*/)
-		{
-			if (i + j < header->size)
-			{
-				ft_memcpy(&c, ptr + i + j, 1);
-				if (c < 15)
-					ft_printf("0");
-				ft_printf("%X", c);
-			}
-			else
-				ft_printf("  ");
-			if ((j+1) % 2 == 0)
-				ft_printf(" ");
-			j++;
-		}
+		print_hexa(header->size, ptr, i, &j);
 		ft_printf("   ");
-		k = 0;
-		while (k < (i + j > header->size ? header->size - i : j))
-		{
-			char s;
-			ft_memcpy(&s, ptr + i + k, 1);
-			if (ft_isprint(s))
-				write(1, ptr + i + k, 1);
-			else
-				ft_printf(".");
-			k++;
-		}
+		printf_char(header->size, ptr, i, j);
 		i += j;
 		ft_printf("\n");
 	}
 }
-		//c = (char*)(ptr); //EXPLICATIONS   =>   ptr + 0 != ptr[0]
 
+void	printf_char(size_t size, void *ptr, unsigned int i, unsigned int j)
+{
+	unsigned int	k;
+	unsigned char	c;
+
+	k = 0;
+	while (k < (i + j > size ? size - i : j))
+	{
+		ft_memcpy(&c, ptr + i + k, 1);
+		if (ft_isprint(c))//ptr + i + k -> EXPLICATIONS ??
+			write(1, ptr + i + k, 1);
+		else
+			ft_printf(".");
+		k++;
+	}
+}
+
+void	print_hexa(size_t size, void *ptr, unsigned int i, unsigned int *j)
+{
+	unsigned char	c;
+
+	*j = 0;
+	while (*j < 16)
+	{
+		if (i + *j < size)
+		{
+			ft_memcpy(&c, ptr + i + *j, 1);
+			if (c < 15)
+				ft_printf("0");
+			ft_printf("%X", c);
+		}
+		else
+			ft_printf("  ");
+		if ((*j+1) % 2 == 0)
+			ft_printf(" ");
+		(*j)++;
+	}
+}
+
+//c = (char*)(ptr); //EXPLICATIONS   =>   ptr + 0 != ptr[0]
 
 void	*realloc2(void *ptr, size_t size)
 {
