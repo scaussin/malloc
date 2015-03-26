@@ -6,7 +6,7 @@
 #    By: scaussin <scaussin@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/02/25 11:50:22 by scaussin          #+#    #+#              #
-#    Updated: 2015/03/20 14:51:10 by scaussin         ###   ########.fr        #
+#    Updated: 2015/03/25 15:48:10 by scaussin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ LIB =			./libft/libft.a
 
 INCLUDES =		-I./includes -I./libft/includes
 
-SRC =			main.c
+SRC =			main.c alloc.c dump_hexa.c manage_header.c show_alloc.c tools.c
 
 OBJ =			$(SRC:.c=.o)
 

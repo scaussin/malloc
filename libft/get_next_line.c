@@ -6,11 +6,12 @@
 /*   By: scaussin <scaussin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/02 13:52:17 by scaussin          #+#    #+#             */
-/*   Updated: 2015/02/19 15:25:55 by scaussin         ###   ########.fr       */
+/*   Updated: 2015/03/26 18:49:28 by scaussin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include "../../malloc.h"
 
 static char	*ft_strndup(const char *s1, int n, int *size_line)
 {

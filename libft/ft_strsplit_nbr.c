@@ -6,7 +6,7 @@
 /*   By: scaussin <scaussin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/19 14:11:25 by scaussin          #+#    #+#             */
-/*   Updated: 2013/12/22 10:13:29 by scaussin         ###   ########.fr       */
+/*   Updated: 2015/03/25 15:49:42 by scaussin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ static char	**ft_create_tab(char **split, const char *s, int m)
 		j++;
 		m--;
 	}
-	split[j] = '\0';
+	split[j] = 0;
 	return (split);
 }
 
