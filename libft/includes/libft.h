@@ -6,14 +6,14 @@
 /*   By: scaussin <scaussin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/23 16:42:08 by scaussin          #+#    #+#             */
-/*   Updated: 2015/03/30 15:51:30 by scaussin         ###   ########.fr       */
+/*   Updated: 2015/03/31 10:27:12 by scaussin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
 
-# define BUFF_SIZE 10
+# define BUFF_SIZE 4096
 # define SIZE_TAB_FNCT 10
 # define FD_MAX 64
 
