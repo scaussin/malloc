@@ -6,15 +6,24 @@
 #    By: scaussin <scaussin@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/02/25 11:50:22 by scaussin          #+#    #+#              #
-#    Updated: 2015/03/30 15:46:35 by scaussin         ###   ########.fr        #
+#    Updated: 2015/04/02 15:39:45 by scaussin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME =			a.out
 
-CC =			gcc -g $(FLAGS) $(INCLUDES)
+ifeq ($(HOSTTYPE),)
+	HOSTTYPE := $(shell uname -m)_$(shell uname -s)
+endif
+
+
+NAME =			libft_malloc_$(HOSTTYPE).so
+
+CC =			gcc $(FLAGS) $(INCLUDES)
+
+LINK =			libft_malloc.so
 
 LIBFT =			-L./libft -lft
+
 LIB =			./libft/libft.a
 
 INCLUDES =		-I./includes -I./libft/includes
@@ -37,9 +46,10 @@ $(NAME):		$(OBJ)
 				@echo "\033[32m[Make]\033[0m   " | tr -d '\n'
 				@echo "\033[36m[$(NAME)]\033[0m " | tr -d '\n'
 				@echo "Building $(NAME)... " | tr -d '\n'
-				$(CC) -o $(NAME) $(OBJ) $(LIBFT)
+				$(CC) -shared -o $(NAME) $(OBJ) $(LIBFT)
 				@echo "\033[32m   -> \033[0m" | tr -d '\n'
 				@echo "\033[36m$(NAME) \033[0m\033[32mcreated\033[0m"
+				@ln -s $(NAME) $(LINK)
 
 clean:
 				Make -C libft clean
@@ -51,6 +61,7 @@ fclean:
 				Make -C libft fclean
 				rm -f $(OBJ)
 				rm -f $(NAME)
+				rm -f $(LINK)
 				@echo "\033[31m[fclean] \033[36m[$(NAME)]\033[0m" | tr -d '\n'
 				@echo " Remove ofiles & $(NAME)"
 

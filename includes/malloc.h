@@ -6,7 +6,7 @@
 /*   By: scaussin <scaussin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/02/20 11:59:08 by scaussin          #+#    #+#             */
-/*   Updated: 2015/03/30 15:38:34 by scaussin         ###   ########.fr       */
+/*   Updated: 2015/04/02 18:26:48 by scaussin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@
 # include "libft.h"
 # include <sys/mman.h>
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+/*# include <stdio.h>
+# include <stdlib.h>
+# include <string.h>*/
 
 # define SIZE_H sizeof(struct s_header)
 
@@ -43,9 +43,9 @@ typedef struct		s_first_header
 	t_header		*large;
 }					t_first_header;
 
-void				*malloc2(size_t size);
-void				*realloc2(void *ptr, size_t size);
-void				free2(void *ptr);
+void				*malloc(size_t size);
+void				*realloc(void *ptr, size_t size);
+void				free(void *ptr);
 
 int					new_alloc(t_header **last, unsigned int size_alloc, t_header *prev);
 void				*get_mem(size_t size, unsigned int size_alloc, t_header **first_header);
@@ -64,5 +64,6 @@ void				show_alloc_mem_ex(void *ptr);
 void				print_hexa(size_t size, void *ptr,  unsigned int i, unsigned int *j);
 void				printf_char(size_t size, void *ptr, unsigned int i, unsigned int j);
 int					same_class(t_header *header, size_t size);
+int					search_header(t_header *start_header, void *ptr);
 
 #endif

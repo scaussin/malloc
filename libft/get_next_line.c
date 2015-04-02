@@ -6,7 +6,7 @@
 /*   By: scaussin <scaussin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/02 13:52:17 by scaussin          #+#    #+#             */
-/*   Updated: 2015/03/30 15:47:49 by scaussin         ###   ########.fr       */
+/*   Updated: 2015/04/02 12:57:32 by scaussin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static char	*ft_strndup(const char *s1, int n, int *size_line)
 	if (s1)
 	{
 		*size_line = n;
-		str = (char *)malloc2(sizeof(char) * n + 1);
+		str = (char *)malloc(sizeof(char) * n + 1);
 		str = ft_memcpy(str, s1, n);
 		str[n] = '\0';
 		return (str);
@@ -34,9 +34,9 @@ static char	*ft_strnjoin(char *s1, char *s2, int n, int *size_line)
 
 	if (s1 && s2)
 	{
-		str = (char *)malloc2(sizeof(char) * (*size_line + n + 1));
+		str = (char *)malloc(sizeof(char) * (*size_line + n + 1));
 		ft_memcpy(str, s1, *size_line);
-		free2(s1);
+		free(s1);
 		ft_memcpy(&str[*size_line], s2, n);
 		str[*size_line + n] = '\0';
 		*size_line += n;

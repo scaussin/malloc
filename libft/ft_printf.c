@@ -6,7 +6,7 @@
 /*   By: scaussin <scaussin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/27 19:56:30 by scaussin          #+#    #+#             */
-/*   Updated: 2015/02/19 15:34:00 by scaussin         ###   ########.fr       */
+/*   Updated: 2015/04/02 18:48:29 by scaussin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 
 static	int		ft_match_fnct(char c, va_list ap)
 {
-	t_fct	*tab_fnct;
+	t_fct	tab_fnct[SIZE_TAB_FNCT];
 	int		ret;
 	int		i;
 
 	i = 0;
 	ret = 0;
-	tab_fnct = ft_init_fun_tab();
+	ft_init_fun_tab(tab_fnct);
 	while (i < SIZE_TAB_FNCT && tab_fnct[i].c != c)
 		i++;
 	if (i < SIZE_TAB_FNCT)

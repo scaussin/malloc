@@ -6,7 +6,7 @@
 /*   By: scaussin <scaussin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/02/20 11:58:13 by scaussin          #+#    #+#             */
-/*   Updated: 2015/03/30 15:56:49 by scaussin         ###   ########.fr       */
+/*   Updated: 2015/04/02 18:34:43 by scaussin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,31 @@
 
 t_first_header		g_first_header = {0, NULL, NULL};
 
-int		main()
+/*int		main()
 {
+
+    char    *str;
+    int        i;
+
+    i = 1;
+    str = malloc(i);
+    while (i < 100)
+    {
+        str = malloc2(i);
+        ft_memset(str, 'a',  i);
+        if (i % 10 == 0)
+        {
+        	ft_putnbr(i);
+        	ft_putendl("");
+        }
+        i++;
+    }
+
+	show_alloc_mem();
+	return (0);
+}*/
+
+/*
 	char *line;
 	int fd = open("test", O_RDONLY);
 	while (get_next_line(fd, &line))
@@ -25,28 +48,34 @@ int		main()
 		ft_printf("%s\n", line);
 		//free2(line);
 	}
-	show_alloc_mem();
-	//print_header(g_first_header.tiny);
-	return (0);
-}
+*/
 
-void	*malloc2(size_t size)
+void	*malloc(size_t size)
 {
+	void *ret;
+	ft_putendl("malloc");
 	if (size <= TINY)
-		return (get_mem(size, TINY_PAGE, &(g_first_header.tiny)));
+		ret = get_mem(size, TINY_PAGE, &(g_first_header.tiny));
 	else if (size <= SMALL)
-		return (get_mem(size, SMALL_PAGE, &(g_first_header.small)));
+		ret = get_mem(size, SMALL_PAGE, &(g_first_header.small));
 	else
-		return (get_mem(size, size + SIZE_H, &(g_first_header.large)));
+		ret = get_mem(size, size + SIZE_H, &(g_first_header.large));
+	return (ret);
 }
 
-void	free2(void *ptr)
+void	free(void *ptr)
 {
 	t_header	*header;
 
 	if (!ptr)
 		return ;
+
+	if (!search_header(g_first_header.tiny, ptr))
+		return ;
+
 	header = (t_header *)(ptr - SIZE_H);
+	ft_putendl("free");
+	write(1, header+1, header->size);
 	header->free = 1;
 	if (header->size > SMALL)
 	{
@@ -62,7 +91,7 @@ void	free2(void *ptr)
 		merge_header(header);
 }
 
-void	*realloc2(void *ptr, size_t size)
+void	*realloc(void *ptr, size_t size)
 {
 	t_header	*header;
 

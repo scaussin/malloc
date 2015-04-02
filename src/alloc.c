@@ -6,7 +6,7 @@
 /*   By: scaussin <scaussin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/03/25 15:36:09 by scaussin          #+#    #+#             */
-/*   Updated: 2015/03/30 15:40:06 by scaussin         ###   ########.fr       */
+/*   Updated: 2015/04/02 18:08:29 by scaussin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,8 @@ int		new_alloc(t_header **last, unsigned int size_alloc, t_header *prev)
 
 void	*find_new_size_in_mem(t_header *header, size_t size)
 {
-	size_t	add_size;
 	void	*new_mem;
+	size_t	add_size;
 
 	add_size = ft_abs(size - header->size);
 	if (header->prev && header->prev->free && mem_following(header->prev) &&
@@ -72,15 +72,15 @@ void	*find_new_size_in_mem(t_header *header, size_t size)
 	if (header->size <= SMALL)
 	{
 		add_size = header->size;
-		free2((void *)header + SIZE_H);
-		new_mem = malloc2(size);
+		free((void *)header + SIZE_H);
+		new_mem = malloc(size);
 		ft_memcpy(new_mem, ((void *)header + SIZE_H), add_size);
 	}
 	else
 	{
-		new_mem = malloc2(size);
+		new_mem = malloc(size);
 		ft_memcpy(new_mem, ((void *)header + SIZE_H), header->size);
-		free2((void *)header + SIZE_H);
+		free((void *)header + SIZE_H);
 	}
 	return (new_mem);
 }
