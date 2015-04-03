@@ -6,7 +6,7 @@
 /*   By: scaussin <scaussin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/27 19:57:44 by scaussin          #+#    #+#             */
-/*   Updated: 2015/04/03 14:45:46 by scaussin         ###   ########.fr       */
+/*   Updated: 2015/04/03 15:51:32 by scaussin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static int	ft_printf_per100_va(va_list ap)
 	return (ft_printf_c('%'));
 }
 
-void	ft_init_fun_tab(t_fct tab[SIZE_TAB_FNCT])
+void		ft_init_fun_tab(t_fct tab[SIZE_TAB_FNCT])
 {
 	tab[0].c = 'd';
 	tab[0].fnct = ft_printf_d_va;
