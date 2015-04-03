@@ -6,7 +6,7 @@
 /*   By: scaussin <scaussin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/27 19:57:44 by scaussin          #+#    #+#             */
-/*   Updated: 2015/04/02 18:48:38 by scaussin         ###   ########.fr       */
+/*   Updated: 2015/04/03 14:45:46 by scaussin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,6 @@ static int	ft_printf_per100_va(va_list ap)
 
 void	ft_init_fun_tab(t_fct tab[SIZE_TAB_FNCT])
 {
-	//t_fct		*tab;
-
-	//tab = (t_fct *)malloc(sizeof(t_fct) * SIZE_TAB_FNCT);
 	tab[0].c = 'd';
 	tab[0].fnct = ft_printf_d_va;
 	tab[1].c = 'i';

@@ -6,7 +6,7 @@
 /*   By: scaussin <scaussin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/03/25 15:41:30 by scaussin          #+#    #+#             */
-/*   Updated: 2015/03/26 18:25:24 by scaussin         ###   ########.fr       */
+/*   Updated: 2015/04/03 14:35:52 by scaussin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,8 +75,10 @@ void	*move_header(size_t add_size, t_header *header, int move_left)
 		header->next->free = 1;
 		ft_memcpy(&save_header_next, header->next, SIZE_H);
 		if (move_left)
-			ft_memcpy((void *)header + SIZE_H, (void *)header->next + SIZE_H, size_tmp);
-		ft_memcpy((void *)header + SIZE_H + header->size, &save_header_next, SIZE_H);
+			ft_memcpy((void *)header + SIZE_H, (void *)header->next + SIZE_H,
+				size_tmp);
+		ft_memcpy((void *)header + SIZE_H + header->size, &save_header_next,
+			SIZE_H);
 		ft_printf("OK2\n");
 		header->next = (void *)header + SIZE_H + header->size;
 		if (header->next->next)

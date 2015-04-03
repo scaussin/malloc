@@ -6,7 +6,7 @@
 /*   By: scaussin <scaussin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/03/25 15:37:32 by scaussin          #+#    #+#             */
-/*   Updated: 2015/03/25 16:07:18 by scaussin         ###   ########.fr       */
+/*   Updated: 2015/04/03 14:33:55 by scaussin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,14 @@ void	show_alloc_mem_ex(void *ptr)
 	header = (ptr - SIZE_H);
 	while (i < header->size)
 	{
-		ft_printf("0x%X    ", ptr + i);
+		ft_putstr("0x");
+		ft_printf_xx((unsigned int)ptr + i);
+		ft_putstr("    ");
 		print_hexa(header->size, ptr, i, &j);
-		ft_printf("   ");
+		ft_putstr("   ");
 		printf_char(header->size, ptr, i, j);
 		i += j;
-		ft_printf("\n");
+		ft_putchar('\n');
 	}
 }
 
@@ -45,7 +47,7 @@ void	printf_char(size_t size, void *ptr, unsigned int i, unsigned int j)
 		if (ft_isprint(c))
 			write(1, ptr + i + k, 1);
 		else
-			ft_printf(".");
+			ft_putchar('.');
 		k++;
 	}
 }
@@ -61,13 +63,13 @@ void	print_hexa(size_t size, void *ptr, unsigned int i, unsigned int *j)
 		{
 			ft_memcpy(&c, ptr + i + *j, 1);
 			if (c < 15)
-				ft_printf("0");
-			ft_printf("%X", c);
+				ft_putchar('0');
+			ft_putnbr_xx(c);
 		}
 		else
-			ft_printf("  ");
-		if ((*j+1) % 2 == 0)
-			ft_printf(" ");
+			ft_putstr("  ");
+		if ((*j + 1) % 2 == 0)
+			ft_putchar(' ');
 		(*j)++;
 	}
 }

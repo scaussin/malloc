@@ -6,7 +6,7 @@
 /*   By: scaussin <scaussin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/03/25 15:40:39 by scaussin          #+#    #+#             */
-/*   Updated: 2015/04/02 17:38:38 by scaussin         ###   ########.fr       */
+/*   Updated: 2015/04/03 14:36:17 by scaussin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,11 @@ int		print_alloc_mem(t_header *first_header)
 			ft_putstr("0x");
 			ft_printf_xx((unsigned int)(first_header + 1));
 			ft_putstr(" - 0x");
-			ft_printf_xx((unsigned int)((void *)(first_header + 1) + first_header->size));
+			ft_printf_xx((unsigned int)((void *)(first_header + 1) +
+				first_header->size));
 			ft_putstr(" : ");
-			ft_putnbr((unsigned int)(((void *)(first_header + 1) + first_header->size) -
+			ft_putnbr((unsigned int)(((void *)(first_header + 1) +
+				first_header->size) -
 				(void *)(first_header + 1)));
 			ft_putstr(" octets\n");
 			count += ((void *)(first_header + 1) + first_header->size) -

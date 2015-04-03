@@ -6,10 +6,9 @@
 #    By: scaussin <scaussin@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/02/25 11:50:22 by scaussin          #+#    #+#              #
-#    Updated: 2015/04/02 15:39:45 by scaussin         ###   ########.fr        #
+#    Updated: 2015/04/03 15:11:34 by scaussin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
-
 
 ifeq ($(HOSTTYPE),)
 	HOSTTYPE := $(shell uname -m)_$(shell uname -s)
@@ -46,6 +45,7 @@ $(NAME):		$(OBJ)
 				@echo "\033[32m[Make]\033[0m   " | tr -d '\n'
 				@echo "\033[36m[$(NAME)]\033[0m " | tr -d '\n'
 				@echo "Building $(NAME)... " | tr -d '\n'
+				@rm -f $(LINK)
 				$(CC) -shared -o $(NAME) $(OBJ) $(LIBFT)
 				@echo "\033[32m   -> \033[0m" | tr -d '\n'
 				@echo "\033[36m$(NAME) \033[0m\033[32mcreated\033[0m"
@@ -65,17 +65,7 @@ fclean:
 				@echo "\033[31m[fclean] \033[36m[$(NAME)]\033[0m" | tr -d '\n'
 				@echo " Remove ofiles & $(NAME)"
 
-run_fclean:
-				rm -f $(OBJ)
-				rm -f $(NAME)
-				@echo "\033[31m[fclean] \033[36m[$(NAME)]\033[0m" | tr -d '\n'
-				@echo " Remove ofiles & $(NAME)"
-
 re:				fclean all
-
-run:			run_fclean $(NAME)
-				./$(NAME)
-
 
 .PHONY:			all clean re fclean
 .SILENT:
