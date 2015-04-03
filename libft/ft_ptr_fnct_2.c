@@ -6,7 +6,7 @@
 /*   By: scaussin <scaussin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/27 19:57:44 by scaussin          #+#    #+#             */
-/*   Updated: 2015/02/19 15:19:35 by scaussin         ###   ########.fr       */
+/*   Updated: 2015/04/03 14:45:46 by scaussin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,8 @@ static int	ft_printf_per100_va(va_list ap)
 	return (ft_printf_c('%'));
 }
 
-t_fct		*ft_init_fun_tab(void)
+void	ft_init_fun_tab(t_fct tab[SIZE_TAB_FNCT])
 {
-	t_fct		*tab;
-
-	tab = (t_fct *)malloc(sizeof(t_fct) * SIZE_TAB_FNCT);
 	tab[0].c = 'd';
 	tab[0].fnct = ft_printf_d_va;
 	tab[1].c = 'i';
@@ -58,5 +55,4 @@ t_fct		*ft_init_fun_tab(void)
 	tab[8].fnct = ft_printf_xx_va;
 	tab[9].c = '%';
 	tab[9].fnct = ft_printf_per100_va;
-	return (tab);
 }

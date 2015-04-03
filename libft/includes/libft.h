@@ -6,7 +6,7 @@
 /*   By: scaussin <scaussin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/23 16:42:08 by scaussin          #+#    #+#             */
-/*   Updated: 2015/02/19 15:33:34 by scaussin         ###   ########.fr       */
+/*   Updated: 2015/04/02 18:48:44 by scaussin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ int		get_next_line(int const fd, char **line);
 ** ft_printf
 */
 int		ft_printf(const char *str, ...);
-t_fct	*ft_init_fun_tab(void);
+void	ft_init_fun_tab(t_fct tab[SIZE_TAB_FNCT]);
 void	ft_putnbr_x(unsigned int n);
 void	ft_putnbr_xx(unsigned int n);
 void	ft_putnbr_p(unsigned long n);
