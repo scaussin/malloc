@@ -6,7 +6,7 @@
 /*   By: scaussin <scaussin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/03/25 15:36:09 by scaussin          #+#    #+#             */
-/*   Updated: 2015/04/02 18:08:29 by scaussin         ###   ########.fr       */
+/*   Updated: 2015/04/07 17:30:58 by scaussin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	*get_mem(size_t size, unsigned int size_alloc, t_header **first_header)
 
 	if (!(*first_header))
 	{
-		if (!new_alloc(first_header, size_alloc, NULL))
+		if (!new_alloc(first_header, size_alloc, NULL, size))
 			return (0);
 		return (get_mem(size, size_alloc, first_header));
 	}
@@ -37,17 +37,18 @@ void	*get_mem(size_t size, unsigned int size_alloc, t_header **first_header)
 		last = tmp;
 		tmp = tmp->next;
 	}
-	if (!new_alloc(&(last->next), size_alloc, last))
+	if (!new_alloc(&(last->next), size_alloc, last, size))
 		return (0);
 	return (get_mem(size, size_alloc, first_header));
 }
 
-int		new_alloc(t_header **last, unsigned int size_alloc, t_header *prev)
+int		new_alloc(t_header **last, unsigned int size_alloc, t_header *prev,
+	size_t size)
 {
 	if (!(*last = (t_header*)mmap(0, size_alloc, PROT_READ | PROT_WRITE,
 		MAP_ANON | MAP_PRIVATE, -1, 0)))
 		return (0);
-	if (size_alloc <= SMALL)
+	if (size <= SMALL)
 		(*last)->size = size_alloc - SIZE_H;
 	else
 		(*last)->size = size_alloc;

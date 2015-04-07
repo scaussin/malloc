@@ -6,7 +6,7 @@
 /*   By: scaussin <scaussin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/02/20 11:59:08 by scaussin          #+#    #+#             */
-/*   Updated: 2015/04/03 14:42:39 by scaussin         ###   ########.fr       */
+/*   Updated: 2015/04/07 17:15:17 by scaussin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void				*realloc(void *ptr, size_t size);
 void				free(void *ptr);
 
 int					new_alloc(t_header **last, unsigned int size_alloc,
-																t_header *prev);
+												t_header *prev, size_t size);
 void				*get_mem(size_t size, unsigned int size_alloc,
 													t_header **first_header);
 void				print_header(t_header *header);
