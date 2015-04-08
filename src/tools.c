@@ -6,7 +6,7 @@
 /*   By: scaussin <scaussin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/03/25 15:39:16 by scaussin          #+#    #+#             */
-/*   Updated: 2015/04/03 14:40:27 by scaussin         ###   ########.fr       */
+/*   Updated: 2015/04/08 12:40:38 by scaussin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int		same_class(t_header *header, size_t size)
 {
 	if (header->size <= TINY && size <= TINY)
 		return (1);
-	else if (header->size <= SMALL && size <= SMALL)
+	else if (header->size > TINY && header->size <= SMALL && size <= SMALL)
 		return (1);
 	else if (header->size > SMALL && size > SMALL)
 		return (1);
@@ -56,7 +56,7 @@ void	print_header(t_header *header)
 			, header, header->size, header->next ? (void *)header->next -
 		(void *)header : (void *)header->next - (void *)header->next,
 			header->free);
-		write(1, header + 1, header->size);
+		write(1, header + 1, header->size > 1000 ? 1000 : header->size);
 		ft_printf("\nnext : %p\nprev : %p\n", header->next, header->prev);
 		header = header->next;
 		ft_printf("------------------------------------");

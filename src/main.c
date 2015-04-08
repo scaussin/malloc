@@ -6,7 +6,7 @@
 /*   By: scaussin <scaussin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/02/20 11:58:13 by scaussin          #+#    #+#             */
-/*   Updated: 2015/04/03 13:22:55 by scaussin         ###   ########.fr       */
+/*   Updated: 2015/04/08 13:00:08 by scaussin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,19 @@ void	free(void *ptr)
 void	*realloc(void *ptr, size_t size)
 {
 	t_header	*header;
+	void		*tmp;
 
-	if (!ptr || size == 0)
-		return (ptr);
+	if (!ptr && size == 0)
+		return (NULL);
+	if (!ptr && size != 0)
+		return (malloc(size));
+	if (ptr && size == 0)
+	{
+		tmp = malloc(((t_header *)(ptr - SIZE_H))->size);
+		ft_memcpy(tmp, ptr, ((t_header *)(ptr - SIZE_H))->size);
+		free(ptr);
+		return (tmp);
+	}
 	header = (t_header *)(ptr - SIZE_H);
 	if (header->size >= size)
 		return (ptr);
