@@ -6,7 +6,7 @@
 /*   By: scaussin <scaussin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/02/20 11:58:13 by scaussin          #+#    #+#             */
-/*   Updated: 2015/04/08 13:00:08 by scaussin         ###   ########.fr       */
+/*   Updated: 2015/04/15 10:32:15 by scaussin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,10 +55,13 @@ void	*realloc(void *ptr, size_t size)
 	t_header	*header;
 	void		*tmp;
 
+
 	if (!ptr && size == 0)
 		return (NULL);
 	if (!ptr && size != 0)
 		return (malloc(size));
+	if (!search_header(g_first_header.tiny, ptr))
+		return (0);
 	if (ptr && size == 0)
 	{
 		tmp = malloc(((t_header *)(ptr - SIZE_H))->size);
