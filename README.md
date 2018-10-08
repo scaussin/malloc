@@ -5,4 +5,4 @@
 ---
 
 # malloc()
-The challange of this project is to re-code malloc(), realloc(), free() using mmap(2)
+The challenge of this project is to re-code malloc(), realloc(), free() using mmap(2)
